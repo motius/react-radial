@@ -69,7 +69,7 @@ const getDrawingConstants = (props: Props): Array<buttonValue> => {
 }
 
 class ReactRadial extends Component<Props, State> {
-  constructor (props) {
+  constructor (props: Props) {
     super(props)
     this.state = {
       hovered: undefined,
@@ -82,7 +82,7 @@ class ReactRadial extends Component<Props, State> {
     this.resetDrawingConstants()
   }
 
-  getAnimationSpec = (hoverShift) => {
+  getAnimationSpec = (hoverShift: number) => {
     const {
       enterDuration,
       leaveDuration,
@@ -132,7 +132,7 @@ class ReactRadial extends Component<Props, State> {
     }
   }
 
-  handleMouseEnter = (id) => () => {
+  handleMouseEnter = (id: string) => () => {
     this.setState({ hovered: id })
   }
 
@@ -140,7 +140,7 @@ class ReactRadial extends Component<Props, State> {
     this.setState({ hovered: undefined })
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = (prevProps: Props) => {
     if (prevProps.buttons.length !== this.props.buttons.length) {
       this.resetDrawingConstants()
     }

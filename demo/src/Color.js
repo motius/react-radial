@@ -3,27 +3,33 @@ import React from 'react'
 import { ChromePicker } from 'react-color'
 import './style.css'
 
-type color = {
+type colorType = {
   r: number,
   g: number,
   b: number,
   a: number,
 }
 
+type selectorColorType = {
+  rgb: colorType,
+}
+
 type Props = {
-  color: color,
-  handleClick: Function,
-  handleChange: Function,
-  enabled: Boolean,
+  color: colorType,
+  handleClick: (string) => void,
+  handleChange: (selectorColorType, string) => void,
+  enabled: boolean,
+  param: string,
+  view: string,
 }
 
 type State = {
-  displayColorPicker: Boolean,
-  color: color,
+  displayColorPicker: boolean,
+  color: colorType,
 }
 
 class ChromePick extends React.Component<Props, State> {
-  constructor (props) {
+  constructor (props: Props) {
     super(props)
     const { r, g, b, a } = props.color
     this.state = {
@@ -40,7 +46,7 @@ class ChromePick extends React.Component<Props, State> {
     this.props.handleClick(this.props.view)
   };
 
-  handleChange = (color) => {
+  handleChange = (color: selectorColorType) => {
     this.props.handleChange(color, this.props.param)
   };
 

@@ -27,7 +27,6 @@ type Props = {
 }
 
 type State = {
-  message: string,
   drawerOpen: boolean,
   sliderRadiusInner: number,
   sliderFirstRadius: number,
@@ -38,6 +37,7 @@ type State = {
   buttonCount: number,
   update: boolean,
   fill: color,
+  hoverShift: number,
   displayColorPickerStroke: boolean,
   displayColorPickerFill: boolean,
   click?: [number, number],
@@ -47,7 +47,6 @@ class Demo extends Component<Props, State> {
   constructor () {
     super()
     this.state = {
-      message: null,
       drawerOpen: true,
       sliderRadiusInner: 20,
       sliderFirstRadius: 120,
@@ -61,33 +60,8 @@ class Demo extends Component<Props, State> {
       displayColorPickerStroke: false,
       displayColorPickerFill: false,
       click: undefined,
+      hoverShift: 10,
     }
-  }
-
-  arrayMaker = (count, value) => {
-    const arr = []
-    for (let i = 1; i <= count; i++) {
-      const closureI = i
-      switch (value) {
-        case 'button':
-          arr.push(value + closureI)
-          break
-        case 'function':
-          arr.push(() => this.dummyFunction(closureI))
-          break
-        default:
-          arr.push(value)
-          break
-      }
-    }
-    return arr
-  }
-
-  dummyFunction (i) {
-    this.setState({
-      message: `you've clicked button number ${i}!`,
-      click: undefined,
-    })
   }
 
   handleClickOutside = () => {
@@ -161,13 +135,14 @@ class Demo extends Component<Props, State> {
       hoverDuration: this.state.hoverDuration,
     }
 
-    const buttons = this.arrayMaker(this.state.buttonCount, 'button').map(buttonLabel => {
-      return {
-        label: buttonLabel,
-        id: buttonLabel,
+    const buttons = []
+    for (let i = 0; i < this.state.buttonCount; i += 1) {
+      buttons.push({
+        label: <Typography variant='body1' className={classes.label}>{`Button ${i}`}</Typography>,
+        id: `button-${i}`,
         onClick: () => undefined,
-      }
-    })
+      })
+    }
 
     return <div className={classes.root}>
       <AppBar
@@ -247,7 +222,7 @@ class Demo extends Component<Props, State> {
             firstOuterRadius={this.state.sliderFirstRadius}
             lastOuterRadius={this.state.sliderLastRadius}
             buttons={buttons}
-            hoverShift={10}
+            hoverShift={this.state.hoverShift}
             onClickOutside={this.handleClickOutside}
             enterDuration={this.state.enterDuration}
             leaveDuration={this.state.leaveDuration}
@@ -286,6 +261,13 @@ const geoArray = [
     value: 'sliderLastRadius',
     min: 1,
     max: 300,
+    step: 1,
+  },
+  {
+    title: 'Hover Shift',
+    value: 'hoverShift',
+    min: 0,
+    max: 50,
     step: 1,
   },
 ]
@@ -357,8 +339,12 @@ const styles = theme => ({
   slider: {
     padding: '18px 0px',
   },
+  label: {
+    color: 'white',
+  },
 })
 
 const StyledDemo = withStyles(styles)(Demo)
 
+// $FlowFixMe
 render(<StyledDemo />, document.querySelector('#demo'))

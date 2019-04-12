@@ -1,4 +1,6 @@
 [ignore]
+.*/node_modules/nwb/templates/react-component/_package.json
+.*/node_modules/nwb/templates/web-module/_package.json
 
 [include]
 
