@@ -1,0 +1,81 @@
+Arguments: 
+  /usr/bin/node /usr/bin/yarn install
+
+PATH: 
+  /home/stuart/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/usr/local/go/bin:/usr/local/go/bin:/home/stuart/.yarn/bin:/home/stuart/.local/bin:/home/stuart/openshift:/home/stuart/go/bin:/home/stuart/.yarn/bin:/home/stuart/.local/bin:/home/stuart/openshift:/home/stuart/go/bin
+
+Yarn version: 
+  1.15.2
+
+Node version: 
+  11.13.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  SyntaxError: /home/stuart/motius-projects/react-radial/package.json: Unexpected string in JSON at position 283
+      at JSON.parse (<anonymous>)
+      at /usr/lib/node_modules/yarn/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/usr/lib/node_modules/yarn/lib/cli.js:304:30)
+      at /usr/lib/node_modules/yarn/lib/cli.js:315:13
+
+npm manifest: 
+  {
+    "name": "react-radial",
+    "version": "1.1.0",
+    "description": "A radial component built with react",
+    "author": "Motius",
+    "homepage": "https://www.motius.de/",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/motius/react-radial"
+    }
+    "main": "lib/index.js",
+    "module": "es/index.js",
+    "files": [
+      "css",
+      "es",
+      "lib",
+      "umd"
+    ],
+    "keywords": [
+      "radial",
+      "pie",
+      "spiral",
+      "menu",
+      "react",
+      "react-component"
+    ],
+    "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject",
+      "test:coverage": "react-scripts test --coverage",
+      "test:watch": "react-scripts test --watch"
+    },
+    "dependencies": {
+      "react": "^16.8.6",
+      "react-dom": "^16.8.6",
+      "react-scripts": "2.1.8"
+    },
+    "devDependencies": {
+      "eslint-config-standard": "^12.0.0",
+      "eslint-config-standard-react": "^7.0.2",
+      "eslint-plugin-import": "^2.14.0",
+      "eslint-plugin-node": "^7.0.1",
+      "eslint-plugin-promise": "^4.0.1",
+      "eslint-plugin-react": "^7.11.1",
+      "eslint-plugin-standard": "^4.0.0",
+      "flow-bin": "^0.86.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
