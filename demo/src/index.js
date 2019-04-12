@@ -1,41 +1,63 @@
+// @flow
 import React, { Component } from 'react'
 import { render } from 'react-dom'
 
 import ReactRadial from '../../src'
 
-// material-ui requirements
 import Drawer from '@material-ui/core/Drawer'
 import Slider from '@material-ui/lab/Slider'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
+import { withStyles } from '@material-ui/core/styles'
 
 import Color from './Color'
 
-class Demo extends Component {
+type color = {
+  r: number,
+  g: number,
+  b: number,
+  a: number,
+}
+
+type Props = {
+  classes: Object,
+}
+
+type State = {
+  message: string,
+  drawerOpen: boolean,
+  sliderRadiusInner: number,
+  sliderRadiusOuter: number,
+  enterDuration: number,
+  leaveDuration: number,
+  hoverDuration: number,
+  buttonCount: number,
+  update: boolean,
+  fill: color,
+  displayColorPickerStroke: boolean,
+  displayColorPickerFill: boolean,
+  click?: [number, number],
+}
+
+class Demo extends Component<Props, State> {
   constructor () {
     super()
     this.state = {
       message: null,
       drawerOpen: true,
       sliderRadiusInner: 20,
-      sliderRadiusInnerDisplay: 20,
       sliderRadiusOuter: 120,
-      sliderRadiusOuterDisplay: 120,
-      duration: 400,
-      durationDisplay: 400,
-      delay: 80,
-      delayDisplay: 80,
-      strokeWidth: 2,
-      strokeWidthDisplay: 2,
+      enterDuration: 400,
+      leaveDuration: 100,
+      hoverDuration: 100,
       buttonCount: 5,
-      buttonCountDisplay: 5,
       update: false,
-      stroke: { r: 255, g: 255, b: 255, a: 1 },
       fill: { r: 0, g: 0, b: 0, a: 0.8 },
       displayColorPickerStroke: false,
       displayColorPickerFill: false,
-
+      click: undefined,
     }
-    this.handleSlider = this.handleSlider.bind(this)
-    this.handleSliderUpdate = this.handleSliderUpdate.bind(this)
   }
 
   arrayMaker = (count, value) => {
@@ -58,28 +80,44 @@ class Demo extends Component {
   }
 
   dummyFunction (i) {
-    this.setState({ message: `you've clicked button number ${i}!` })
+    this.setState({
+      message: `you've clicked button number ${i}!`,
+      click: undefined,
+    })
   }
 
-  handleSlider (event, value, key) {
+  handleClickOutside = () => {
+    this.setState({
+      click: undefined,
+    })
+  }
+
+  handleSlider = (event, value, key) => {
     this.setState({ [key]: value })
   }
-  handleSliderUpdate (key) {
-    this.setState({ [key]: this.state[`${key}Display`] })
+
+  handleClick = (event) => {
+    this.setState({
+      click: [
+        event.clientX - 300,
+        event.clientY - 60,
+      ],
+    })
   }
 
   sliderMaker = (array) => (
     array.map((ob, i) =>
       <div key={i}>
-        {`${ob.title}: ` + this.state[`${ob.value}Display`]}
+        <Typography>{`${ob.title}: ` + this.state[ob.value]}</Typography>
         <Slider
           min={ob.min}
           max={ob.max}
           step={ob.step}
-          value={this.state[`${ob.value}Display`]}
-          onChange={(event, value) => this.handleSlider(event, value, `${ob.value}Display`)}
-          onDragStop={() => this.handleSliderUpdate(ob.value)}
-          sliderStyle={{ marginTop: '10px', marginBottom: '10px' }}
+          value={this.state[ob.value]}
+          onChange={(event, value) => this.handleSlider(event, value, ob.value)}
+          classes={{
+            container: this.props.classes.slider,
+          }}
         />
       </div>
     )
@@ -97,14 +135,25 @@ class Demo extends Component {
   };
 
   render () {
+    const {
+      classes,
+    } = this.props
+
     const codeOb = {
-      stroke: `rgba(${this.state.stroke.r},${this.state.stroke.g},${this.state.stroke.b},${this.state.stroke.a})`,
       fill: `rgba(${this.state.fill.r},${this.state.fill.g},${this.state.fill.b},${this.state.fill.a})`,
-      strokeWidth: this.state.strokeWidth,
-      buttons: `['button1','button2', ...${this.state.buttonCount} strings}]`,
-      buttonFunctions: `[()=>console.log(you've clicked button 1!), ...${this.state.buttonCount} functions]`,
+      buttons: `[
+        {
+          id: 'button1',
+          label: 'button1',
+          onClick: () => console.log('Clicked button 1'),
+        },
+        ...
+      ]`,
       innerRadius: this.state.sliderRadiusInner,
       outerRadius: this.state.sliderRadiusOuter,
+      enterDuration: this.state.enterDuration,
+      leaveDuration: this.state.leaveDuration,
+      hoverDuration: this.state.hoverDuration,
     }
 
     const buttons = this.arrayMaker(this.state.buttonCount, 'button').map(buttonLabel => {
@@ -115,27 +164,36 @@ class Demo extends Component {
       }
     })
 
-    return <div id='main' style={{ width: '100%', height: '100vh' }}>
-      <div id='header' style={{ background: codeOb.fill, color: codeOb.stroke, fontWeight: 100 }}>
-        <span style={{ fontSize: '20px' }} >react-radial demo</span>
-        <span style={{ float: 'right', paddingRight: '10px' }}>
-          <a href='https://www.npmjs.com/package/react-radial' target='_blank'>npm</a><span style={{ paddingLeft: '10px', paddingRight: '10px' }}>|</span>
-          <a href='https://github.com/modelab/react-radial' target='_blank'>github</a><span style={{ paddingLeft: '10px', paddingRight: '10px' }}>|</span>
-          <a href='https://modelab.is' target='_blank'>modelab</a></span>
-      </div >
-      <div id='codeBlock' style={{ paddingTop: '20px' }}><code>
-        {`<ReactRadial ` + Object.keys(codeOb).map(key => (
-          key === 'stroke' || key === 'fill'
-            ? `${key}={"${(codeOb[key])}"}`
-            : `${key}={${(codeOb[key])}}`)
-        ).join(' ') + `/>`
-        }
-      </code></div>
-      <div style={{ position: 'absolute', bottom: '20px', width: '75%', marginLeft: '25%', textAlign: 'center', pointerEvents: 'none' }}>
-        {this.state.message || 'click canvas to close. click canvas again to open.'}
-      </div>
+    return <div className={classes.root}>
+      <AppBar
+        position='fixed'
+        className={classes.appBar}
+        style={{ background: codeOb.fill }}
+      >
+        <Toolbar>
+          <Typography variant='h6' color='inherit' noWrap inline>react-radial demo</Typography>
+          <div className={classes.grow}>
+            <a href='https://github.com/motius/react-radial' target='_blank'>
+              <Typography variant='h6' color='inherit' noWrap inline>
+                GitHub
+              </Typography>
+            </a>
+            <span style={{ paddingLeft: '10px', paddingRight: '10px' }}>|</span>
+            <a href='https://motius.de' target='_blank'>
+              <Typography variant='h6' color='inherit' noWrap inline>
+                Motius
+              </Typography>
+            </a>
+          </div>
+        </Toolbar>
+      </AppBar>
       <Drawer
-        width='25%'
+        className={classes.drawer}
+        variant='permanent'
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+        anchor='left'
       >
         <div style={{ width: '75%', margin: '0 auto', marginTop: '30px', fontSize: '12px', padding: '0px' }}>
           <h3 style={{ marginBottom: '40px' }}>react-radial parameters</h3>
@@ -145,18 +203,6 @@ class Demo extends Component {
           </div>
           <div style={{ marginBottom: '40px' }}>
             <h4>color</h4>
-            <div style={{ width: '100%' }}>
-              <div style={{ marginBottom: '15px' }}> stroke color</div>
-              <Color
-                handleClick={this.colorHandleClick}
-                handleClose={this.colorHandleClose}
-                handleChange={this.colorHandleChange}
-                enabled={this.state.displayColorPickerStroke}
-                color={this.state.stroke}
-                param='stroke'
-                view='displayColorPickerStroke'
-              />
-            </div>
             <div style={{ width: '100%' }}>
               <div style={{ marginTop: '15px', marginBottom: '15px' }}> fill color</div>
               <Color
@@ -173,15 +219,36 @@ class Demo extends Component {
           <h4>time</h4>
           {this.sliderMaker(timeArray)}
         </div>
+        <div className={classes.codeBlock}>
+          <code>
+            {`<ReactRadial
+              cx={/*TODO*/}
+              cy={/*TODO*/}
+              ` + Object.keys(codeOb).map(key => (
+              key === 'fill'
+                ? `${key}={"${(codeOb[key])}"}`
+                : `${key}={${(codeOb[key])}}`)
+            ).join('\n') + `\n/>`}
+          </code>
+        </div>
       </Drawer>
-      <ReactRadial
-        cx={150}
-        cy={150}
-        innerRadius={this.state.sliderRadiusInner}
-        outerRadius={this.state.sliderRadiusOuter}
-        buttons={buttons}
-        hoverShift={10}
-      />
+      <main className={classes.content} onClick={this.handleClick}>
+        {this.state.click && (
+          <ReactRadial
+            cx={this.state.click[0]}
+            cy={this.state.click[1]}
+            fill={`rgba(${this.state.fill.r}, ${this.state.fill.g}, ${this.state.fill.b}, ${this.state.fill.a})`}
+            innerRadius={this.state.sliderRadiusInner}
+            outerRadius={this.state.sliderRadiusOuter}
+            buttons={buttons}
+            hoverShift={10}
+            onClickOutside={this.handleClickOutside}
+            enterDuration={this.state.enterDuration}
+            leaveDuration={this.state.leaveDuration}
+            hoverDuration={this.state.hoverDuration}
+          />
+        )}
+      </main>
     </div >
   }
 }
@@ -208,31 +275,70 @@ const geoArray = [
     max: 300,
     step: 1,
   },
-  {
-    title: 'stroke width',
-    value: 'strokeWidth',
-    min: 0,
-    max: 10,
-    step: 0.1,
-  },
-
 ]
 
 const timeArray = [
   {
-    title: 'duration',
-    value: 'duration',
+    value: 'enterDuration',
+    title: 'Enter Duration',
     min: 0,
     max: 1600,
     step: 1,
   },
   {
-    title: 'delay',
-    value: 'delay',
+    value: 'leaveDuration',
+    title: 'Leave Duration',
     min: 0,
-    max: 200,
+    max: 1600,
+    step: 1,
+  },
+  {
+    value: 'hoverDuration',
+    title: 'Hover Duration',
+    min: 0,
+    max: 1600,
     step: 1,
   },
 ]
 
-render(<Demo />, document.querySelector('#demo'))
+const drawerWidth = 300
+
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    height: '100vh',
+  },
+  grow: {
+    flex: 1,
+    textAlign: 'right',
+  },
+  appBar: {
+    width: `calc(100% - ${drawerWidth}px)`,
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  content: {
+    flexGrow: 1,
+    height: `calc(100% - ${theme.mixins.toolbar.minHeight + theme.spacing.unit + 4}px)`,
+    position: 'relative',
+    top: theme.mixins.toolbar.minHeight + theme.spacing.unit,
+    boxSizing: 'border-box',
+  },
+  codeBlock: {
+    padding: '15px',
+    whiteSpace: 'pre-line',
+  },
+  slider: {
+    marginTop: '10px',
+    marginBottom: '10px',
+  },
+})
+
+const StyledDemo = withStyles(styles)(Demo)
+
+render(<StyledDemo />, document.querySelector('#demo'))

@@ -26,6 +26,10 @@ type Props = {
   buttons: Array<radialButtonLink>,
   onClickOutside: Function,
   hoverShift: number,
+  fill: string,
+  enterDuration: number,
+  leaveDuration: number,
+  hoverDuration: number,
 }
 
 type State = {
@@ -33,52 +37,6 @@ type State = {
   show: boolean,
   buttonValues: Array<buttonValue>,
 }
-
-const enterDuration = 500
-const leaveDuration = 100
-const hoverDuration = 100
-
-const getAnimationSpec = (hoverShift) => ({
-  start: {
-    enter: 0,
-    hover: 0,
-  },
-  enter: {
-    enter: [1],
-    hover: 0,
-    timing: {
-      duration: enterDuration,
-    },
-  },
-  update: [
-    {
-      enter: [1],
-      timing: {
-        duration: enterDuration,
-      },
-    },
-    {
-      hover: [hoverShift],
-      timing: {
-        duration: hoverDuration,
-      },
-    },
-  ],
-  leave: [
-    {
-      enter: [0],
-      timing: {
-        duration: leaveDuration,
-      },
-    },
-    {
-      hover: [0],
-      timing: {
-        duration: hoverDuration,
-      },
-    },
-  ],
-})
 
 const getDrawingConstants = (props: Props): Array<buttonValue> => {
   const {
@@ -120,6 +78,56 @@ class ReactRadial extends Component<Props, State> {
     this.resetDrawingConstants()
   }
 
+  getAnimationSpec = (hoverShift) => {
+    const {
+      enterDuration,
+      leaveDuration,
+      hoverDuration,
+    } = this.props
+
+    return {
+      start: {
+        enter: 0,
+        hover: 0,
+      },
+      enter: {
+        enter: [1],
+        hover: 0,
+        timing: {
+          duration: enterDuration,
+        },
+      },
+      update: [
+        {
+          enter: [1],
+          timing: {
+            duration: enterDuration,
+          },
+        },
+        {
+          hover: [hoverShift],
+          timing: {
+            duration: hoverDuration,
+          },
+        },
+      ],
+      leave: [
+        {
+          enter: [0],
+          timing: {
+            duration: leaveDuration,
+          },
+        },
+        {
+          hover: [0],
+          timing: {
+            duration: hoverDuration,
+          },
+        },
+      ],
+    }
+  }
+
   handleMouseEnter = (id) => () => {
     this.setState({ hovered: id })
   }
@@ -148,6 +156,7 @@ class ReactRadial extends Component<Props, State> {
       buttons,
       onClickOutside,
       hoverShift,
+      fill,
     } = this.props
 
     const {
@@ -161,7 +170,6 @@ class ReactRadial extends Component<Props, State> {
           width: '100%',
           height: '100%',
           position: 'absolute',
-          backgroundColor: 'rgba(255, 255, 255, 0.5)',
         }}
         onClick={() => {
           this.setState({
@@ -188,7 +196,7 @@ class ReactRadial extends Component<Props, State> {
             return (
               <Animate
                 key={`${button.id}-arc`}
-                {...getAnimationSpec(hovered === button.id ? hoverShift : 0)}
+                {...this.getAnimationSpec(hovered === button.id ? hoverShift : 0)}
                 show={this.state.show}
               >
                 {(animationState) => {
@@ -204,6 +212,7 @@ class ReactRadial extends Component<Props, State> {
                       hovered={hovered === button.id}
                       onMouseEnter={this.handleMouseEnter(button.id)}
                       onMouseLeave={this.handleMouseLeave}
+                      fill={fill}
                     />
                   )
                 }}
@@ -221,7 +230,7 @@ class ReactRadial extends Component<Props, State> {
           return (
             <Animate
               key={`${button.id}-label`}
-              {...getAnimationSpec(hovered === button.id ? hoverShift : 0)}
+              {...this.getAnimationSpec(hovered === button.id ? hoverShift : 0)}
               show={this.state.show}
             >
               {(animationState) => {

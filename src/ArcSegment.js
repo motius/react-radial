@@ -33,6 +33,7 @@ type Props = {
   onClick: Function,
   onMouseEnter: Function,
   onMouseLeave: Function,
+  fill: string,
 }
 
 class ArcSegment extends Component<Props> {
@@ -47,6 +48,7 @@ class ArcSegment extends Component<Props> {
       onClick,
       onMouseEnter,
       onMouseLeave,
+      fill,
     } = this.props
 
     const regionPath = describeArcRegion(x, y, innerRadius, outerRadius, startAngle, endAngle)
@@ -58,7 +60,7 @@ class ArcSegment extends Component<Props> {
       >
         <path d={regionPath} style={{
           cursor: 'pointer',
-          fill: 'rgba(0, 0, 0, 0.7)',
+          fill: fill,
         }} />
       </g>
     )
