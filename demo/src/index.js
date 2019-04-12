@@ -28,7 +28,8 @@ type State = {
   message: string,
   drawerOpen: boolean,
   sliderRadiusInner: number,
-  sliderRadiusOuter: number,
+  sliderFirstRadius: number,
+  sliderLastRadius: number,
   enterDuration: number,
   leaveDuration: number,
   hoverDuration: number,
@@ -47,7 +48,8 @@ class Demo extends Component<Props, State> {
       message: null,
       drawerOpen: true,
       sliderRadiusInner: 20,
-      sliderRadiusOuter: 120,
+      sliderFirstRadius: 120,
+      sliderLastRadius: 180,
       enterDuration: 400,
       leaveDuration: 100,
       hoverDuration: 100,
@@ -150,7 +152,8 @@ class Demo extends Component<Props, State> {
         ...
       ]`,
       innerRadius: this.state.sliderRadiusInner,
-      outerRadius: this.state.sliderRadiusOuter,
+      firstOuterRadius: this.state.sliderFirstRadius,
+      lastOuterRadius: this.state.sliderLastRadius,
       enterDuration: this.state.enterDuration,
       leaveDuration: this.state.leaveDuration,
       hoverDuration: this.state.hoverDuration,
@@ -196,15 +199,15 @@ class Demo extends Component<Props, State> {
         anchor='left'
       >
         <div style={{ width: '75%', margin: '0 auto', marginTop: '30px', fontSize: '12px', padding: '0px' }}>
-          <h3 style={{ marginBottom: '40px' }}>react-radial parameters</h3>
+          <Typography variant='h6'>react-radial Parameters</Typography>
           <div style={{ marginBottom: '40px' }}>
-            <h4>geometry</h4>
+            <Typography variant='h6'>Geometry</Typography>
             {this.sliderMaker(geoArray)}
           </div>
           <div style={{ marginBottom: '40px' }}>
-            <h4>color</h4>
+            <Typography variant='h6'>Color</Typography>
             <div style={{ width: '100%' }}>
-              <div style={{ marginTop: '15px', marginBottom: '15px' }}> fill color</div>
+              <div style={{ marginTop: '15px', marginBottom: '15px' }}>Fill Color</div>
               <Color
                 handleClick={this.colorHandleClick}
                 handleClose={this.colorHandleClose}
@@ -216,7 +219,7 @@ class Demo extends Component<Props, State> {
               />
             </div>
           </div>
-          <h4>time</h4>
+          <Typography variant='h6'>Time</Typography>
           {this.sliderMaker(timeArray)}
         </div>
         <div className={classes.codeBlock}>
@@ -239,7 +242,8 @@ class Demo extends Component<Props, State> {
             cy={this.state.click[1]}
             fill={`rgba(${this.state.fill.r}, ${this.state.fill.g}, ${this.state.fill.b}, ${this.state.fill.a})`}
             innerRadius={this.state.sliderRadiusInner}
-            outerRadius={this.state.sliderRadiusOuter}
+            firstOuterRadius={this.state.sliderFirstRadius}
+            lastOuterRadius={this.state.sliderLastRadius}
             buttons={buttons}
             hoverShift={10}
             onClickOutside={this.handleClickOutside}
@@ -255,22 +259,29 @@ class Demo extends Component<Props, State> {
 
 const geoArray = [
   {
-    title: 'button count',
+    title: 'Button Count',
     value: 'buttonCount',
     min: 2,
     max: 20,
     step: 1,
   },
   {
-    title: 'inner radius',
+    title: 'Inner Radius',
     value: 'sliderRadiusInner',
     min: 1,
     max: 300,
     step: 1,
   },
   {
-    title: 'outer radius',
-    value: 'sliderRadiusOuter',
+    title: 'First Outer Radius',
+    value: 'sliderFirstRadius',
+    min: 1,
+    max: 300,
+    step: 1,
+  },
+  {
+    title: 'Last Outer Radius',
+    value: 'sliderLastRadius',
     min: 1,
     max: 300,
     step: 1,

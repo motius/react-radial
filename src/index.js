@@ -22,7 +22,8 @@ type Props = {
   cx: number,
   cy: number,
   innerRadius: number,
-  outerRadius: number,
+  firstOuterRadius: number,
+  lastOuterRadius: number,
   buttons: Array<radialButtonLink>,
   onClickOutside: Function,
   hoverShift: number,
@@ -43,15 +44,18 @@ const getDrawingConstants = (props: Props): Array<buttonValue> => {
     cx,
     cy,
     buttons,
-    outerRadius,
+    firstOuterRadius,
+    lastOuterRadius,
   } = props
 
   const anglePerButton = 2 * Math.PI / buttons.length
+  const radiusIncrement = (lastOuterRadius - firstOuterRadius) / buttons.length
+
   return buttons.map((button, index) => {
     const startAngle = anglePerButton * index
     const endAngle = anglePerButton * (index + 1)
     const halfAngle = (endAngle + startAngle) / 2
-    const segmentOuterRadius = outerRadius + index * 10
+    const segmentOuterRadius = firstOuterRadius + index * radiusIncrement
     const { x, y } = polarToCartesian(cx, cy, 2, halfAngle)
 
     return {

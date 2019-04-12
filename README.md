@@ -28,14 +28,15 @@ In contrast to the original component, this version needs to be told where to dr
 
 ## Props
 
-| Name          | Type                                                     | Description                                          |
-| ------------- | -------------------------------------------------------- | ---------------------------------------------------- |
-| cx            | number                                                   | x position enter of the circle, in pixels            |
-| cx            | number                                                   | y position enter of the circle, in pixels            |
-| fill          | string                                                   | rgba(...) string for the fill colour of the segments |
-| buttons       | Array<{ id: string, label: Element, onClick: function }> | An array of buttons, with all of their behaviour     |
-| innerRadius   | number                                                   | donut hole size                                      |
-| outerRadius   | number                                                   | radius of the outer edge of the first segment        |
-| enterDuration | number                                                   | duration of the enter animation                      |
-| leaveDuration | number                                                   | duration of the leave animation                      |
-| hoverDuration | number                                                   | duration of the hover animation                      |
+| Name             | Type                                                     | Description                                          |
+| ---------------- | -------------------------------------------------------- | ---------------------------------------------------- |
+| cx               | number                                                   | x position enter of the circle, in pixels            |
+| cx               | number                                                   | y position enter of the circle, in pixels            |
+| fill             | string                                                   | rgba(...) string for the fill colour of the segments |
+| buttons          | Array<{ id: string, label: Element, onClick: function }> | An array of buttons, with all of their behaviour     |
+| innerRadius      | number                                                   | donut hole size                                      |
+| firstouterRadius | number                                                   | radius of the outer edge of the first segment        |
+| lastouterRadius  | number                                                   | radius of the outer edge of the last segment         |
+| enterDuration    | number                                                   | duration of the enter animation                      |
+| leaveDuration    | number                                                   | duration of the leave animation                      |
+| hoverDuration    | number                                                   | duration of the hover animation                      |
