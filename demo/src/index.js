@@ -3,25 +3,15 @@ import { render } from 'react-dom'
 
 import ReactRadial from '../../src'
 
+// material-ui requirements
+import Drawer from '@material-ui/core/Drawer'
+import Slider from '@material-ui/lab/Slider'
 
-import { ChromePicker } from 'react-color';
-
-//material-ui requirements
-import Drawer from 'material-ui/Drawer';
-import Slider from 'material-ui/Slider';
-
-import Color from './Color';
-
-
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
-import injectTapEventPlugin from 'react-tap-event-plugin';
-injectTapEventPlugin();
-
+import Color from './Color'
 
 class Demo extends Component {
-  constructor() {
-    super();
+  constructor () {
+    super()
     this.state = {
       message: null,
       drawerOpen: true,
@@ -39,47 +29,42 @@ class Demo extends Component {
       buttonCountDisplay: 5,
       update: false,
       stroke: { r: 255, g: 255, b: 255, a: 1 },
-      fill: { r: 0, g: 0, b: 0, a: .8 },
+      fill: { r: 0, g: 0, b: 0, a: 0.8 },
       displayColorPickerStroke: false,
       displayColorPickerFill: false,
 
     }
-    this.handleSlider = this.handleSlider.bind(this);
-    this.handleSliderUpdate = this.handleSliderUpdate.bind(this);
-  }
-  getChildContext() { //required for material-ui
-    const mainTheme = getMuiTheme(baseTheme);
-    mainTheme.slider.selectionColor = '#2194CE'
-    return { muiTheme: mainTheme };
+    this.handleSlider = this.handleSlider.bind(this)
+    this.handleSliderUpdate = this.handleSliderUpdate.bind(this)
   }
 
   arrayMaker = (count, value) => {
-    const arr = [];
+    const arr = []
     for (let i = 1; i <= count; i++) {
-      const closureI = i;
+      const closureI = i
       switch (value) {
         case 'button':
           arr.push(value + closureI)
-          break;
+          break
         case 'function':
-          arr.push(() => this.dummyFunction(closureI));
-          break;
+          arr.push(() => this.dummyFunction(closureI))
+          break
         default:
           arr.push(value)
-          break;
+          break
       }
     }
-    return arr;
+    return arr
   }
 
-  dummyFunction(i) {
+  dummyFunction (i) {
     this.setState({ message: `you've clicked button number ${i}!` })
   }
 
-  handleSlider(event, value, key) {
+  handleSlider (event, value, key) {
     this.setState({ [key]: value })
   }
-  handleSliderUpdate(key) {
+  handleSliderUpdate (key) {
     this.setState({ [key]: this.state[`${key}Display`] })
   }
 
@@ -111,31 +96,38 @@ class Demo extends Component {
     this.setState({ [key]: color.rgb })
   };
 
-  render() {
+  render () {
     const codeOb = {
-      delay: this.state.delay,
-      duration: this.state.duration,
       stroke: `rgba(${this.state.stroke.r},${this.state.stroke.g},${this.state.stroke.b},${this.state.stroke.a})`,
       fill: `rgba(${this.state.fill.r},${this.state.fill.g},${this.state.fill.b},${this.state.fill.a})`,
       strokeWidth: this.state.strokeWidth,
       buttons: `['button1','button2', ...${this.state.buttonCount} strings}]`,
       buttonFunctions: `[()=>console.log(you've clicked button 1!), ...${this.state.buttonCount} functions]`,
       innerRadius: this.state.sliderRadiusInner,
-      outerRadius: this.state.sliderRadiusOuter
+      outerRadius: this.state.sliderRadiusOuter,
     }
+
+    const buttons = this.arrayMaker(this.state.buttonCount, 'button').map(buttonLabel => {
+      return {
+        label: buttonLabel,
+        id: buttonLabel,
+        onClick: () => undefined,
+      }
+    })
+
     return <div id='main' style={{ width: '100%', height: '100vh' }}>
       <div id='header' style={{ background: codeOb.fill, color: codeOb.stroke, fontWeight: 100 }}>
         <span style={{ fontSize: '20px' }} >react-radial demo</span>
         <span style={{ float: 'right', paddingRight: '10px' }}>
-          <a href='https://www.npmjs.com/package/react-radial' target="_blank">npm</a><span style={{ paddingLeft: '10px', paddingRight: '10px' }}>|</span>
-          <a href='https://github.com/modelab/react-radial' target="_blank">github</a><span style={{ paddingLeft: '10px', paddingRight: '10px' }}>|</span>
-          <a href='https://modelab.is' target="_blank">modelab</a></span>
+          <a href='https://www.npmjs.com/package/react-radial' target='_blank'>npm</a><span style={{ paddingLeft: '10px', paddingRight: '10px' }}>|</span>
+          <a href='https://github.com/modelab/react-radial' target='_blank'>github</a><span style={{ paddingLeft: '10px', paddingRight: '10px' }}>|</span>
+          <a href='https://modelab.is' target='_blank'>modelab</a></span>
       </div >
       <div id='codeBlock' style={{ paddingTop: '20px' }}><code>
         {`<ReactRadial ` + Object.keys(codeOb).map(key => (
-          key === 'stroke' || key === 'fill' ?
-            `${key}={"${(codeOb[key])}"}` :
-            `${key}={${(codeOb[key])}}`)
+          key === 'stroke' || key === 'fill'
+            ? `${key}={"${(codeOb[key])}"}`
+            : `${key}={${(codeOb[key])}}`)
         ).join(' ') + `/>`
         }
       </code></div>
@@ -183,16 +175,12 @@ class Demo extends Component {
         </div>
       </Drawer>
       <ReactRadial
-        delay={this.state.delay}
-        duration={this.state.duration}
+        cx={150}
+        cy={150}
         innerRadius={this.state.sliderRadiusInner}
         outerRadius={this.state.sliderRadiusOuter}
-        buttons={this.arrayMaker(this.state.buttonCount, 'button')}
-        buttonFunctions={this.arrayMaker(this.state.buttonCount, 'function')}
-        strokeWidth={this.state.strokeWidth}
-        stroke={`rgba(${this.state.stroke.r},${this.state.stroke.g},${this.state.stroke.b},${this.state.stroke.a})`}
-        fill={`rgba(${this.state.fill.r},${this.state.fill.g},${this.state.fill.b},${this.state.fill.a})`}
-        autoLoad
+        buttons={buttons}
+        hoverShift={10}
       />
     </div >
   }
@@ -200,55 +188,51 @@ class Demo extends Component {
 
 const geoArray = [
   {
-    title: "button count",
+    title: 'button count',
     value: 'buttonCount',
     min: 2,
     max: 20,
-    step: 1
+    step: 1,
   },
   {
-    title: "inner radius",
+    title: 'inner radius',
     value: 'sliderRadiusInner',
     min: 1,
     max: 300,
-    step: 1
+    step: 1,
   },
   {
-    title: "outer radius",
+    title: 'outer radius',
     value: 'sliderRadiusOuter',
     min: 1,
     max: 300,
-    step: 1
+    step: 1,
   },
   {
-    title: "stroke width",
+    title: 'stroke width',
     value: 'strokeWidth',
     min: 0,
     max: 10,
-    step: .1
+    step: 0.1,
   },
 
 ]
 
 const timeArray = [
   {
-    title: "duration",
+    title: 'duration',
     value: 'duration',
     min: 0,
     max: 1600,
-    step: 1
+    step: 1,
   },
   {
-    title: "delay",
+    title: 'delay',
     value: 'delay',
     min: 0,
     max: 200,
-    step: 1
+    step: 1,
   },
 ]
-
-Demo.childContextTypes = { //required for material-ui
-  muiTheme: React.PropTypes.object.isRequired
-};
 
 render(<Demo />, document.querySelector('#demo'))
