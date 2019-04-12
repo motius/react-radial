@@ -13,6 +13,8 @@ import { withStyles } from '@material-ui/core/styles'
 
 import Color from './Color'
 
+const drawerWidth = 400
+
 type color = {
   r: number,
   g: number,
@@ -101,15 +103,15 @@ class Demo extends Component<Props, State> {
   handleClick = (event) => {
     this.setState({
       click: [
-        event.clientX - 300,
+        event.clientX - drawerWidth,
         event.clientY - 60,
       ],
     })
   }
 
   sliderMaker = (array) => (
-    array.map((ob, i) =>
-      <div key={i}>
+    array.map((ob) => (
+      <div key={ob.value}>
         <Typography>{`${ob.title}: ` + this.state[ob.value]}</Typography>
         <Slider
           min={ob.min}
@@ -122,7 +124,7 @@ class Demo extends Component<Props, State> {
           }}
         />
       </div>
-    )
+    ))
   )
   colorHandleClick = (key) => {
     this.setState({ [key]: !this.state[key] })
@@ -174,7 +176,7 @@ class Demo extends Component<Props, State> {
         style={{ background: codeOb.fill }}
       >
         <Toolbar>
-          <Typography variant='h6' color='inherit' noWrap inline>react-radial demo</Typography>
+          <Typography variant='h6' color='inherit' noWrap inline>react-radial Demo</Typography>
           <div className={classes.grow}>
             <a href='https://github.com/motius/react-radial' target='_blank'>
               <Typography variant='h6' color='inherit' noWrap inline>
@@ -198,13 +200,13 @@ class Demo extends Component<Props, State> {
         }}
         anchor='left'
       >
-        <div style={{ width: '75%', margin: '0 auto', marginTop: '30px', fontSize: '12px', padding: '0px' }}>
-          <Typography variant='h6'>react-radial Parameters</Typography>
-          <div style={{ marginBottom: '40px' }}>
+        <div className={classes.drawerContents}>
+          <Typography variant='h5' className={classes.drawerHeading}>react-radial Parameters</Typography>
+          <div className={classes.drawerSection}>
             <Typography variant='h6'>Geometry</Typography>
             {this.sliderMaker(geoArray)}
           </div>
-          <div style={{ marginBottom: '40px' }}>
+          <div className={classes.drawerSection}>
             <Typography variant='h6'>Color</Typography>
             <div style={{ width: '100%' }}>
               <div style={{ marginTop: '15px', marginBottom: '15px' }}>Fill Color</div>
@@ -221,18 +223,18 @@ class Demo extends Component<Props, State> {
           </div>
           <Typography variant='h6'>Time</Typography>
           {this.sliderMaker(timeArray)}
-        </div>
-        <div className={classes.codeBlock}>
-          <code>
-            {`<ReactRadial
-              cx={/*TODO*/}
-              cy={/*TODO*/}
-              ` + Object.keys(codeOb).map(key => (
-              key === 'fill'
-                ? `${key}={"${(codeOb[key])}"}`
-                : `${key}={${(codeOb[key])}}`)
-            ).join('\n') + `\n/>`}
-          </code>
+          <div className={classes.codeBlock}>
+            <code>
+              {`<ReactRadial
+                cx={/*TODO*/}
+                cy={/*TODO*/}
+                ` + Object.keys(codeOb).map(key => (
+                key === 'fill'
+                  ? `${key}={"${(codeOb[key])}"}`
+                  : `${key}={${(codeOb[key])}}`)
+              ).join('\n') + `\n/>`}
+            </code>
+          </div>
         </div>
       </Drawer>
       <main className={classes.content} onClick={this.handleClick}>
@@ -312,8 +314,6 @@ const timeArray = [
   },
 ]
 
-const drawerWidth = 300
-
 const styles = theme => ({
   root: {
     display: 'flex',
@@ -332,6 +332,17 @@ const styles = theme => ({
   },
   drawerPaper: {
     width: drawerWidth,
+    overflowX: 'hidden',
+  },
+  drawerHeading: {
+    marginBottom: '20px',
+  },
+  drawerContents: {
+    width: '75%',
+    margin: '0 auto',
+  },
+  drawerSection: {
+    marginBottom: '10px',
   },
   content: {
     flexGrow: 1,
@@ -341,12 +352,10 @@ const styles = theme => ({
     boxSizing: 'border-box',
   },
   codeBlock: {
-    padding: '15px',
     whiteSpace: 'pre-line',
   },
   slider: {
-    marginTop: '10px',
-    marginBottom: '10px',
+    padding: '18px 0px',
   },
 })
 
