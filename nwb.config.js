@@ -5,11 +5,11 @@ module.exports = {
     umd: {
       global: 'RadialMenu',
       externals: {
-        react: 'React'
-      }
-    }
+        react: 'React',
+      },
+    },
   },
   webpack: {
-    uglify: false
-  }
+    uglify: false,
+  },
 }
